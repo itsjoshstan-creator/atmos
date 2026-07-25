@@ -22,6 +22,21 @@ jobs:
           mkdir project
           unzip -q Weather-Australia-Source.zip -d project
 
+                - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: project/package-lock.json
+
+      - name: Install project dependencies
+        working-directory: project
+        run: npm ci
+
+      - name: Synchronise Android project
+        working-directory: project
+        run: npx cap sync android
+
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
