@@ -20,7 +20,7 @@ jobs:
       - name: Extract Android project
         run: |
           mkdir project
-          unzip -q Atmos-Source-v5.zip -d project
+          unzip -q Atmos-Source-0.1.0.zip -d project
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
