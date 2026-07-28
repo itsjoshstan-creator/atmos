@@ -20,7 +20,7 @@ jobs:
       - name: Extract Android project
         run: |
           mkdir project
-          unzip -q Atmos-Source-0.60.3.zip -d project
+          unzip -q Atmos-Source-0.60.4.zip -d project
 
       - name: Set up Java
         uses: actions/setup-java@v4
