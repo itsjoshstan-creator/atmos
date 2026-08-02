@@ -1,4 +1,4 @@
-name: Build Weather Australia APK
+name: Build Atmos Performance APK
 
 on:
   workflow_dispatch:
@@ -19,8 +19,10 @@ jobs:
 
       - name: Extract Android project
         run: |
-          mkdir project
-          unzip -q Atmos-Source-0.63.9-Rebased.zip -d project
+          rm -rf project
+          mkdir -p project
+          unzip -q Atmos-Source-0.64.0-Performance.zip -d project
+          test -f project/android/gradlew
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -28,20 +30,25 @@ jobs:
           distribution: temurin
           java-version: "17"
           cache: gradle
-          cache-dependency-path: project/android/*.gradle*
+          cache-dependency-path: |
+            project/android/*.gradle*
+            project/android/settings.gradle*
+            project/android/gradle.properties
+            project/android/app/*.gradle*
+            project/android/gradle/wrapper/gradle-wrapper.properties
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Build APK
+      - name: Build performance APK
         working-directory: project/android
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew clean assemblePerformance --no-daemon
 
-      - name: Upload APK
+      - name: Upload performance APK
         uses: actions/upload-artifact@v4
         with:
-          name: Weather-Australia-APK
-          path: project/android/app/build/outputs/apk/debug/app-debug.apk
+          name: Atmos-0.64.0-Performance-APK
+          path: project/android/app/build/outputs/apk/performance/app-performance.apk
           if-no-files-found: error
