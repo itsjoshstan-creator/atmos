@@ -21,7 +21,7 @@ jobs:
         run: |
           rm -rf project
           mkdir -p project
-          unzip -q Atmos-Source-0.64.1-Effects.zip -d project
+          unzip -q Atmos-Source-0.64.2-Effects.zip -d project
           test -f project/android/gradlew
 
       - name: Set up Java
