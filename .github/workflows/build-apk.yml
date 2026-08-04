@@ -21,7 +21,7 @@ jobs:
         run: |
           rm -rf project
           mkdir -p project
-          unzip -q Atmos-Source-0.67.8.zip -d project
+          unzip -q Atmos-Source-0.67.8-Atmos-Moments-Living-Clouds-Build-Fix.zip -d project
           test -f project/android/gradlew
 
       - name: Set up Java
