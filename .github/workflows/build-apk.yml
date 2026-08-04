@@ -21,7 +21,7 @@ jobs:
         run: |
           rm -rf project
           mkdir -p project
-          unzip -q Atmos-Source-0.67.9-Dynamic-Colour-Soundscape.zip -d project
+          unzip -q Atmos-Source-0.67.9-Dynamic-Colour-Soundscape-Build-Compatibility-Fix.zip -d project
           test -f project/android/gradlew
 
       - name: Set up Java
