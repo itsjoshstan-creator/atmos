@@ -32,7 +32,7 @@ jobs:
           set -euo pipefail
 
           SOURCE_ZIP=$(git log --diff-filter=AM --name-only --pretty=format: -- 'Atmos-Source-*.zip' \
-            | awk 'NF && !seen[$0]++ { print; exit }')
+            | awk 'NF && !seen[$0]++ && !found { print; found=1 }')
 
           if [ -z "${SOURCE_ZIP:-}" ] || [ ! -f "$SOURCE_ZIP" ]; then
             echo "Could not identify the most recently committed Atmos source ZIP."
@@ -52,10 +52,10 @@ jobs:
           mkdir -p project
           unzip -q "${{ steps.source.outputs.zip }}" -d project
 
-          GRADLEW=$(find project -maxdepth 4 -type f -name gradlew | head -n 1)
+          GRADLEW=$(find project -maxdepth 4 -type f -name gradlew -print -quit)
           if [ -z "${GRADLEW:-}" ]; then
             echo "Could not find gradlew in the selected source ZIP."
-            find project -maxdepth 4 -type f | head -100
+            find project -maxdepth 4 -type f -print | sed -n '1,100p'
             exit 1
           fi
 
@@ -90,9 +90,8 @@ jobs:
             exit 1
           fi
 
-          VERSION=$(grep -E 'versionName[[:space:]]*[= ]' "$BUILD_FILE" \
-            | head -n 1 \
-            | sed -E 's/.*versionName[[:space:]]*[= ]+["'\'']([^"'\'']+)["'\''].*/\1/')
+          VERSION=$(sed -nE 's/.*versionName[[:space:]]*[= ]+["'\'']([^"'\'']+)["'\''].*/\1/p' "$BUILD_FILE" \
+            | sed -n '1p')
 
           if [ -z "${VERSION:-}" ]; then
             echo "Unable to read versionName from ${BUILD_FILE}."
@@ -147,7 +146,7 @@ jobs:
           mkdir -p release
 
           APK=$(find "${ANDROID_DIR}/app/build/outputs/apk/${{ steps.gradle_task.outputs.output_dir }}" \
-            -type f -name '*.apk' | head -n 1)
+            -type f -name '*.apk' -print -quit)
 
           if [ -z "${APK:-}" ]; then
             echo "No APK was generated."
